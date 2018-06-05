@@ -50,18 +50,26 @@ switch flag,
         phi_k=[x(n+1:n+nA);x(n+nA+d+1:2*n+d)];        
         F_k=reshape(x(2*n+d+1:end-1),n,n);
         
+        input  = u(1);
+        output = u(2);
+        switch_signal = u(3);
+        
         % Compute F(t+1) using matrix inversion lemma
         
-        F_p=
+        % Using variable forgetting factor
+        lambda2 = 1;
+        lambda1 = 1- phi_k*F_k*phi_k'/(1+phi_k'*F_k*phi_k); %Using equation after Eq. 4.72
+        
+        F_p = 1/lambda1* (F_k - F_k*phi_k*(phi_k)'*F_k) / ((lambda1/lambda2) + phi_k' * F_k * phi_k);
         
         % Compute the a priori prediction error
-        epsilon=
+        epsilon = output - theta_k' * phi_k;
         
         % Dead zone
         
         
         % Compute the new estimate for theta
-        theta_p=
+        theta_p = theta_k + F_p*phi_k*epsilon;
         
         % Update the observation vector
         phi_p=[-u(2);x(n+1:n+nA-1);u(1);x(n+nA+1:2*n-1+d)];
@@ -77,9 +85,15 @@ switch flag,
         
     case 3
         % Compute yhat and theta_k
-        theta_k=
-        yhat=
-        sys=[yhat;theta_k];
+        lambda2 = 1;
+        lambda1 = 1- phi_k*F_k*phi_k'/(1+phi_k'*F_k*phi_k); %Using equation after Eq. 4.72
+        F_p = 1/lambda1* (F_k - F_k*phi_k*(phi_k)'*F_k) / ((lambda1/lambda2) + phi_k' * F_k * phi_k);
+        epsilon = output - theta_k' * phi_k;
+        phi_p=[-u(2);x(n+1:n+nA-1);u(1);x(n+nA+1:2*n-1+d)];
+        
+        theta_p=theta_k + F_p*phi_k*epsilon;  %Changed theta_k to theta_p, not sure if correct
+        yhat=theta_p' * phi_p;
+        sys=[yhat;theta_p];                     % Changed theta_k to theta_p here too, again, not sure if correct
 
     case 9
         sys=[];

@@ -66,7 +66,11 @@ switch flag,
                 T=u(nr+ns+6:nr+ns+nt+6)';    
         end
         % Compute the control signal and save it (do not forget the saturation)
-        u_k=tf(conv(T,A), conv(A,S) + conv(B, R), Ts,'variable','z^-1');
+        u = x(1:ns-1); 
+        ref = x(nr+ns+1:n-1);
+        out = x(ns+1:nr+ns-1);
+        
+        u_k = T*ref(1) - R*y(1:length(R)) - u(1:length(S)-1)*S(2:end);
         
         if u_k > Usatplus
             u_k = Usatplus;
@@ -82,7 +86,19 @@ switch flag,
         end
      % output update
     case 3
-     % Compute again u_k and send it out  
+     % Compute again u_k and send it out
+        u = x(1:ns-1); 
+        ref = x(nr+ns+1:n-1);
+        out = x(ns+1:nr+ns-1);
+        
+        u_k = T*ref(1) - R*y(1:length(R)) - u(1:length(S)-1)*S(2:end);
+        
+        if u_k > Usatplus
+            u_k = Usatplus;
+        elseif u_k < Usatminus
+            u_k = Usatminus;
+        end
+        
         sys=u_k;
   
     case 9

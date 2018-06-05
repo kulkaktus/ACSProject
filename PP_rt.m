@@ -38,7 +38,8 @@ switch flag,
         
         % The students should write the code for computing an RST
         % controller
-        
+        [R,S] = Poleplace(B,A,Hr,Hs,P);
+        T = sum(R); %Same tracking and regulation dynamics
         sys=[R;S;T];
     case 9
         sys=[];

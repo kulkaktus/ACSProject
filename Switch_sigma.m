@@ -1,4 +1,4 @@
-function [sys,x0,str,ts]=Switch_sigma(t,x,u,flag,beta,lambda,DT)
+9function [sys,x0,str,ts]=Switch_sigma(t,x,u,flag,beta,lambda,DT)
 % This S-Function computes the switching signal for switching adaptive control. 
 % The input vector u has m inputs that are the estimation errors from a 
 % multi-estimator. The parameters are the weighting factor beta 
@@ -29,18 +29,42 @@ switch flag,
     case 2
         % Based on u(i) compute the monintoring signal Ji in a recursive
         % way for all inputs (prediction errors)
-        
-        for i=1,m
-            Ji=
+        if x(m+2) == DT
+            sums = zeros(m,1);
+            best_Ji = 100000;
+            best_i = 1;
+            for i=1:m
+                error = u(i);
+                old_sum = x(m+1);
+                new_sum = exp(-lambda)*old_sum + error^2;
+                Ji = beta* new_sum + error^2;
+
+                if Ji < best_Ji
+                    best_Ji = Ji;
+                    best_i = i;
+                end
+
+                x(i) = new_sum;            
+            end
+            x(m+1) = best_i;
+            if best_i == 100000
+                "ERROR IN SWITCH SIGMA"
+            end
         end
-       
+        x(m+1) = best_i;
+        x(m+2) = x(m+2)-1;
+        
+        if x(m+2) == 0
+            x(m+2) = DT;
+        end
+        
+            
         % Write an algorithm for the Dwell-Time
         % DT shows the number of sampling period of waiting between two
         % switchings and is saved in x(m+2).
         % x(m+1) is the choice of the best predictor.
         
-        
-        sys=[Ji;x(m+1);x(m+2)];
+        sys=[x(1:m);x(m+1);x(m+2)];
         
      % output update
     case 3
