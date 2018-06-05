@@ -40,6 +40,8 @@ switch flag,
         % controller
         [R,S] = Poleplace(B,A,Hr,Hs,P);
         T = sum(R); %Same tracking and regulation dynamics
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%% Should we use Q-parametrization? Too slow here probably %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         sys=[R;S;T];
     case 9
         sys=[];

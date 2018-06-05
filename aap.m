@@ -65,9 +65,11 @@ switch flag,
         % Compute the a priori prediction error
         epsilon = output - theta_k' * phi_k;
         
-        % Dead zone
-        
-        
+        % Dead zone  
+        if epsilon < deadzone %Mulig dette er feil, prøver
+            epsilon = 0;
+        end
+            
         % Compute the new estimate for theta
         theta_p = theta_k + F_p*phi_k*epsilon;
         
