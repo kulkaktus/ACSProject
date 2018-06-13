@@ -1,4 +1,5 @@
 load('TorMod.mat');
+Ts = 0.04;
 n_models = 3;
 Gs = [G1; G2; G3];
 As = [G1.f; G2.f; G3.f];
@@ -17,10 +18,10 @@ nq = 9;
 ["Model", "Margin", "RiseTime", "a", "nq"] 
 Candidates = zeros(70, 5); % model, number of candidates, [margin, risetime, a, nq]
 index = 1;  
-for model=1 %For model 1, a=0.2, nq=9 gives 0.37 MM
+for model=2 %For model 1, a=0.2, nq=9 gives 0.37 MM
     
-    for a = 0.27:0.005:0.29 %for 1, tried 0.1:0.02:0.5, none of them are feasible
-        for nq = 8:12
+    for a = 0.35 %for 1, tried 0.1:0.02:0.5, none of them are feasible
+        for nq = 9
             G = Gs(model);
             B = Bs(model,:);
             A = As(model,:);
@@ -71,7 +72,7 @@ for model=1 %For model 1, a=0.2, nq=9 gives 0.37 MM
             %end
             Candidates(index,:) = [model, MM_new, risetime, a, nq];
             index = index + 1
-            
+           
             
         end
     end
