@@ -21,8 +21,7 @@ function [R,S]=Poleplace(B,A,Hr,Hs,P)
     A1 = conv(A,Hs);
     B1 = conv(B,Hr);
     % M1, M2 are left and right halves of sylvester matrix
-    disp("A1")
-    disp(A1)
+    
     M1 = tril(toeplitz([A1,zeros(1,n_b1+d-1)])); %PROBLEM%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     M1 = M1(:, 1:n_b1+d);
    

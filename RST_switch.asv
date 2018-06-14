@@ -112,7 +112,7 @@ switch flag,
         disp(length(R))
 
         ref = u(2);
-        y = x(ns+1:nr+ns);
+        y = [u(3),x(ns+1:nr+ns)];
         u_k = T*ref(1) -      R*y(1:length(R)) - past_inputs(1:length(S)-1)* (S(2:end))';
         
         disp("7")

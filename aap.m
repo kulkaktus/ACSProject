@@ -47,7 +47,6 @@ switch flag
         ts  = [-1 0]; 
         
     case 2
-        disp("HEIHEIHIHI")
         input  = u(1);
         output = u(2);
         switch_signal = u(3);
@@ -113,12 +112,7 @@ switch flag
         
     case 3
         % Compute yhat and theta_k
-        disp("Plant in:")
-        disp(u(1))
-        disp("Plant out:")
-        disp(u(2))
-        disp("Switch:")
-        disp(u(3))
+        
         phi_k=[x(n+1:n+nA);x(n+nA+d+1:2*n+d)];
         theta_k = x(1:n);
        

@@ -29,9 +29,50 @@ switch flag,
     case 2
         % Based on u(i) compute the monintoring signal Ji in a recursive
         % way for all inputs (prediction errors)
+        best_i = x(m+1);
+        sums = x(1:m);
         if x(m+2) == DT
             best_Ji = 100000;
-            best_i = 1;
+            sums = zeros(m,1);
+            for i=1:m
+                error = u(i);
+                old_sum = x(m+1);
+               
+                new_sum = exp(-lambda)*old_sum + error^2;
+                Ji = beta* new_sum + error^2;
+
+                if Ji < best_Ji
+                    best_Ji = Ji;
+                    best_i = i;
+                end
+
+                sums(i) = new_sum;            
+            end
+            x(m+1) = best_i;
+            if best_i == 100000
+                "ERROR IN SWITCH SIGMA"
+            end
+        end
+       
+        remaining_DT = x(m+2);
+        if remaining_DT == 0
+            remaining_DT = DT;
+        end
+        
+            
+        % Write an algorithm for the Dwell-Time
+        % DT shows the number of sampling period of waiting between two
+        % switchings and is saved in x(m+2).
+        % x(m+1) is the choice of the best predictor.
+        
+        sys=[sums;best_i;remaining_DT-1];
+        
+     % output update
+    case 3
+        best_i = x(m+1);
+        if x(m+2) == DT
+            best_Ji = 100000;
+            
             for i=1:m
                 error = u(i);
                 old_sum = x(m+1);
@@ -51,24 +92,9 @@ switch flag,
             end
         end
         x(m+1) = best_i;
-        x(m+2) = x(m+2)-1;
+       
         
-        if x(m+2) == 0
-            x(m+2) = DT;
-        end
-        
-            
-        % Write an algorithm for the Dwell-Time
-        % DT shows the number of sampling period of waiting between two
-        % switchings and is saved in x(m+2).
-        % x(m+1) is the choice of the best predictor.
-        
-        sys=[x(1:m);x(m+1);x(m+2)];
-        
-     % output update
-    case 3
-        disp("Switch")
-        disp(x(m+1))
+ 
         
         sys=x(m+1); 
     case 9

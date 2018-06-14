@@ -66,31 +66,25 @@ switch flag,
                 T=u(nr+ns+6:nr+ns+nt+6)';    
         end
         % Compute the control signal and save it (do not forget the saturation)
-        disp("1")
         
-        past_inputs = x(1:ns-1); 
+        past_inputs = x(1:ns);
         ref = u(2);
-        y = x(ns+1:nr+ns-1);
-        disp("2")
-        disp(S)
-        u_k = T*ref(1) - R*y(1:length(R)) - past_inputs(1:length(S)-1)*S(2:end);
-        
+        y = [u(3);x(ns+1:nr+ns)];
+
+        u_k = T*ref(1) -   R*y(1:length(R)) - past_inputs(1:length(S)-1)'* (S(2:end))';
         if u_k > Usatplus
             u_k = Usatplus;
         elseif u_k < Usatminus
             u_k = Usatminus;
         end
-        disp("3")
         % Update the state vector (including past inputs, past outputs and past reference signals)
         if nt>0
             sys=[u_k;x(1:ns-1);u(3);x(ns+1:nr+ns-1);u(2);x(nr+ns+1:n-1)]; 
         else
             sys=[u_k;x(1:ns-1);u(3);x(ns+1:nr+ns-1)];  
         end
-        disp("4")
      % output update
     case 3
-        disp("5")
         switch u(1)
             case 1
                 R=R1;S=S1;T=T1;
@@ -103,19 +97,17 @@ switch flag,
                 S=u(nr+5:nr+ns+5)';
                 T=u(nr+ns+6:nr+ns+nt+6)';
         end
-        disp("6")
      % Compute again u_k and send it out
      % sys=[u_k;x(1:ns-1);u(3);x(ns+1:nr+ns-1)];    
      
         past_inputs = x(1:ns); 
-        disp(nr)
-        disp(length(R))
+        
 
         ref = u(2);
-        y = x(ns+1:nr+ns);
-        u_k = T*ref(1) -      R*y(1:length(R)) - past_inputs(1:length(S)-1)* (S(2:end))';
+        y = [u(3);x(ns+1:nr+ns)];
+        u_k = T*ref(1) -   R*y(1:length(R)) - past_inputs(1:length(S)-1)'* (S(2:end))';
         
-        disp("7")
+       
         if u_k > Usatplus
             u_k = Usatplus;
         elseif u_k < Usatminus

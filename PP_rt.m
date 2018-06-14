@@ -40,7 +40,7 @@ switch flag,
             A=[1; u(1:nA)]';
             B=[zeros(d+1,1);u(nA+1:nB+nA)]';
         end
-        
+        A
         % The students should write the code for computing an RST
         % controller
         
