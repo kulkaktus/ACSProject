@@ -20,13 +20,14 @@ function [R,S]=Poleplace(B,A,Hr,Hs,P)
 
     A1 = conv(A,Hs);
     B1 = conv(B,Hr);
-   
     % M1, M2 are left and right halves of sylvester matrix
-    M1 = tril(toeplitz([A1,zeros(1,n_b1+d-1)]));
+    disp("A1")
+    disp(A1)
+    M1 = tril(toeplitz([A1,zeros(1,n_b1+d-1)])); %PROBLEM%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     M1 = M1(:, 1:n_b1+d);
+   
     M2 = tril(toeplitz([zeros(1,d+1), B1(2:end), zeros(1,n_a1-1)]));
     M2 = M2(:, 1:n_a1);
-    
     M = [M1, M2];
     p = ([P,zeros(1, n_a1+n_b1+d-length(P))])';
     x = M\p;

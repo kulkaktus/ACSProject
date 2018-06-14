@@ -1,0 +1,23 @@
+load('K1.mat');
+load('K2.mat');
+load('K3.mat');
+load('Tormod.mat');
+
+nA = length(G1.F) - 1;
+d = 0;
+if length(B) > 1
+    for i=2:length(B)
+        if B(i) == 0
+            d = d + 1;
+        end
+    end
+end
+nB = length(B)-d-1;
+
+ poles_aux = [a,a,a,a,a,a,a,a,a,a];
+            coefs = poly(poles_aux);
+            P_new = conv(P, coefs);
+
+beta = 0.5;
+lambda = 0.5;
+DT = 2;

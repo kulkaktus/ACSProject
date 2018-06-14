@@ -2,3 +2,7 @@ Questions
 
 1. Have we understood aap.mat correctly? Theta_k in case 3??
 2. Which part of the controller should we save? K?
+3. How to load models and controllers into si6mulink and S-functions
+4. Where to set function parameters
+
+Sending theta from AAP does not give the correct A matrix to B, instead of [1, a1, a2 ...] we get [1, 1, a1, a2...]

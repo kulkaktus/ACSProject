@@ -33,26 +33,21 @@ switch flag,
         
      % output update
     case 3
-        if t==0 %Use model 3 as initial model
-            B=[0         0    0.0080   -0.0118    0.0204    0.0079];
-            A=[1.0000   -3.7349    6.9589   -8.3407    6.6806   -3.4386    0.8750];
-        else
-            A=[1; u(1:nA)]';
-            B=[zeros(d+1,1);u(nA+1:nB+nA)]';
-        end
-        
+        A=[1;u(1:nA)]';
+        B=[zeros(d+1,1);u(nA+1:nB+nA)]';
+        disp(A)
+        disp(B)
         % The students should write the code for computing an RST
         % controller
-        
         [R,S] = Poleplace(B,A,Hr,Hs,P);
         T = sum(R); %Same tracking and regulation dynamics
         
         R = [R, zeros(1, 9)]';
         S = [S, zeros(1, 9)]';
-       
+        disp(R);
+        disp(S);
         %%%%%%%%%%%%%%%%%%%%%%%%%%%% Should we use Q-parametrization? Too slow here probably %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         sys=[R;S;T];
-        
     case 9
         sys=[];
  end

@@ -27,8 +27,9 @@ B3=[0         0    0.0080   -0.0118    0.0204    0.0079]';
 A3=[1.0000   -3.7349    6.9589   -8.3407    6.6806   -3.4386    0.8750]';
 
 
-switch flag,
-    case 0,
+
+switch flag
+    case 0
         
         sizes = simsizes;
         sizes.NumContStates  = 0;
@@ -39,20 +40,24 @@ switch flag,
         sizes.NumSampleTimes = 1;
 
         sys = simsizes(sizes);
-
+    
         
         x0  = zeros(Nstate,1);
         str = [];
         ts  = [-1 0]; 
         
     case 2
-        theta_k=x(1:n);
-        phi_k=[x(n+1:n+nA);x(n+nA+d+1:2*n+d)];        
-        F_k=reshape(x(2*n+d+1:end-1),n,n);
-        
+        disp("HEIHEIHIHI")
         input  = u(1);
         output = u(2);
         switch_signal = u(3);
+        
+        previous_signal = x(end);
+        F_k=reshape(x(2*n+d+1:end-1),n,n); % We never set the initial one...
+        theta_k=x(1:n);
+        phi_k=[x(n+1:n+nA);x(n+nA+d+1:2*n+d)];  
+        
+              
         
         % Compute F(t+1) using matrix inversion lemma
         
@@ -61,6 +66,7 @@ switch flag,
         lambda1 = 1- phi_k'*F_k*phi_k/(1+phi_k'*F_k*phi_k); %Using equation after Eq. 4.72
         
         F_p = 1/lambda1* (F_k - F_k*phi_k*(phi_k)'*F_k) / ((lambda1/lambda2) + phi_k' * F_k * phi_k);
+        
         
         % Compute the a priori prediction error
         epsilon = output - theta_k' * phi_k;
@@ -80,23 +86,44 @@ switch flag,
         % Initialize the parameters with the best model in the transition 
         % of the switching signal (its past value is saved in x(end))
         
-        if u(3)~= x(end)
+        if switch_signal ~= x(end)
             % reinitialize the parameters acording to u(3)
+            
+            switch switch_signal
+                case 1
+                    theta_p = [A1(2:end);B1(2+d:end)];
+                    F_p = F0;
+                case 2
+                    theta_p = [A2(2:end);B2(2+d:end)];
+                    F_p = F0;
+                case 3
+                    theta_p = [A3(2:end);B3(2+d:end)];
+                    F_p = F0;
+                case 4
+                    % Use previous best
+                otherwise %Use model 3
+                    theta_p = [A3(2:end);B3(2+d:end)];
+                    F_p = F0;
+                    
+            end
+            
         end
+        
         sys=[theta_p;phi_p;reshape(F_p,n*n,1);u(3)];
         
     case 3
         % Compute yhat and theta_k
-        lambda2 = 1;
-        lambda1 = 1- phi_k*F_k*phi_k'/(1+phi_k'*F_k*phi_k); %Using equation after Eq. 4.72
-        F_p = 1/lambda1* (F_k - F_k*phi_k*(phi_k)'*F_k) / ((lambda1/lambda2) + phi_k' * F_k * phi_k);
-        epsilon = output - theta_k' * phi_k;
-        phi_p=[-u(2);x(n+1:n+nA-1);u(1);x(n+nA+1:2*n-1+d)];
-        
-        theta_p=theta_k + F_p*phi_k*epsilon;  %Changed theta_k to theta_p, not sure if correct
-        yhat=theta_p' * phi_p;
-        sys=[yhat;theta_p];                     % Changed theta_k to theta_p here too, again, not sure if correct
-
+        disp("Plant in:")
+        disp(u(1))
+        disp("Plant out:")
+        disp(u(2))
+        disp("Switch:")
+        disp(u(3))
+        phi_k=[x(n+1:n+nA);x(n+nA+d+1:2*n+d)];
+        theta_k = x(1:n);
+       
+        yhat=theta_k' * phi_k;
+        sys=[yhat;theta_k];                   
     case 9
         sys=[];
  end

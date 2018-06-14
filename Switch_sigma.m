@@ -1,4 +1,4 @@
-9function [sys,x0,str,ts]=Switch_sigma(t,x,u,flag,beta,lambda,DT)
+function [sys,x0,str,ts]=Switch_sigma(t,x,u,flag,beta,lambda,DT)
 % This S-Function computes the switching signal for switching adaptive control. 
 % The input vector u has m inputs that are the estimation errors from a 
 % multi-estimator. The parameters are the weighting factor beta 
@@ -30,7 +30,6 @@ switch flag,
         % Based on u(i) compute the monintoring signal Ji in a recursive
         % way for all inputs (prediction errors)
         if x(m+2) == DT
-            sums = zeros(m,1);
             best_Ji = 100000;
             best_i = 1;
             for i=1:m
@@ -68,6 +67,9 @@ switch flag,
         
      % output update
     case 3
+        disp("Switch")
+        disp(x(m+1))
+        
         sys=x(m+1); 
     case 9
         sys=[];
