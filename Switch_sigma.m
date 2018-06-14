@@ -34,6 +34,7 @@ switch flag,
         if x(m+2) == DT
             best_Ji = 100000;
             sums = zeros(m,1);
+            
             for i=1:m
                 error = u(i);
                 old_sum = x(i);
@@ -48,7 +49,7 @@ switch flag,
 
                 sums(i) = new_sum;            
             end
-            x(m+1) = best_i;
+            
             if best_i == 100000
                 "ERROR IN SWITCH SIGMA"
             end
@@ -70,7 +71,7 @@ switch flag,
      % output update
     case 3
         best_i = x(m+1);
-        DT
+        dwelltime = x(m+2)
         if x(m+2) == DT
             best_Ji = 100000;
             
@@ -93,13 +94,6 @@ switch flag,
             end
         end
        
-        remaining_DT = x(m+2);
-        if remaining_DT == 0
-            remaining_DT = DT+1;
-        end
-        
-        
-        
         sys=best_i; 
     case 9
         sys=[];

@@ -67,7 +67,7 @@ switch flag
         % Using variable forgetting factor
         epsilon = output - theta_k' * phi_k;
         lambda2 = 1;
-        alpha = 0.5;
+        alpha = 0.05;
         %lambda1 = 1- phi_k'*F_k*phi_k/(1+phi_k'*F_k*phi_k) %Using equation after Eq. 4.72
         lambda1 = 1 - alpha*epsilon^2/(1+phi_k'*F_k*phi_k);
         F_p = 1/lambda1* (F_k - F_k*phi_k*(phi_k)'*F_k) / ((lambda1/lambda2) + phi_k' * F_k * phi_k);
