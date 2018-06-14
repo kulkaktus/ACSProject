@@ -36,7 +36,7 @@ switch flag,
             sums = zeros(m,1);
             for i=1:m
                 error = u(i);
-                old_sum = x(i);
+                old_sum = x(m+1);
                
                 new_sum = exp(-lambda)*old_sum + error^2;
                 Ji = beta* new_sum + error^2;
@@ -56,7 +56,7 @@ switch flag,
        
         remaining_DT = x(m+2);
         if remaining_DT == 0
-            remaining_DT = DT+1;
+            remaining_DT = DT;
         end
         
             
@@ -70,16 +70,15 @@ switch flag,
      % output update
     case 3
         best_i = x(m+1);
-        DT
         if x(m+2) == DT
             best_Ji = 100000;
             
             for i=1:m
                 error = u(i);
-                old_sum = x(i);
+                old_sum = x(m+1);
                 new_sum = exp(-lambda)*old_sum + error^2;
                 Ji = beta* new_sum + error^2;
-                abc = [i, Ji]
+
                 if Ji < best_Ji
                     best_Ji = Ji;
                     best_i = i;
@@ -87,18 +86,14 @@ switch flag,
 
                 x(i) = new_sum;            
             end
-            
+            x(m+1) = best_i;
             if best_i == 100000
                 "ERROR IN SWITCH SIGMA"
             end
         end
        
-        remaining_DT = x(m+2);
-        if remaining_DT == 0
-            remaining_DT = DT+1;
-        end
         
-        
+ 
         
         sys=best_i; 
     case 9

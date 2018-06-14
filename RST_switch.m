@@ -50,14 +50,18 @@ switch flag,
         x0  = zeros(sizes.NumDiscStates,1);
         str = [];
         ts  = [Ts 0]; 
-        
+    
      % state update 
     case 2     
+        
+        switch_signal_in_RST = u(1)
         switch u(1)
             case 1
                 R=R1;S=S1;T=T1;
+               
             case 2
                 R=R2;S=S2;T=T2;
+                
             case 3
                 R=R3;S=S3;T=T3;
             case 4
@@ -106,7 +110,6 @@ switch flag,
         ref = u(2);
         y = [u(3);x(ns+1:nr+ns)];
         u_k = T*ref(1) -   R*y(1:length(R)) - past_inputs(1:length(S)-1)'* (S(2:end))';
-        
        
         if u_k > Usatplus
             u_k = Usatplus;

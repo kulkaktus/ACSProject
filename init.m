@@ -31,5 +31,5 @@ Hs = [1 -1];
 Hr = [1 1]; 
 
 beta = 0.5;
-lambda = 0.5;
+lambda = 0.05;
 DT = 2;

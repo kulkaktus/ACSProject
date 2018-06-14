@@ -16,7 +16,7 @@ F0=eye(n);
 
 % The parameters of G1
 B1=[0         0   -0.0062    0.0118   -0.0052    0.0068]';
-A1=[1.0000   -4.2442    8.4788  -10.3763    8.2172   -3.9835    0.9080]';
+A1=[1.0000   -4.2442    7.4788  -10.3763    8.2172   -3.9835    0.9080]';
 
 % The parameters of G2
 B2=[0         0    0.0179   -0.0410    0.0475   -0.0074]';
@@ -52,7 +52,11 @@ switch flag
         switch_signal = u(3);
         
         previous_signal = x(end);
+        
         F_k=reshape(x(2*n+d+1:end-1),n,n); % We never set the initial one...
+        if t == 0
+            F_k = F0
+        end
         theta_k=x(1:n);
         phi_k=[x(n+1:n+nA);x(n+nA+d+1:2*n+d)];  
         
@@ -61,17 +65,18 @@ switch flag
         % Compute F(t+1) using matrix inversion lemma
         
         % Using variable forgetting factor
+        epsilon = output - theta_k' * phi_k;
         lambda2 = 1;
-        lambda1 = 1- phi_k'*F_k*phi_k/(1+phi_k'*F_k*phi_k); %Using equation after Eq. 4.72
-        
+        alpha = 0.5;
+        %lambda1 = 1- phi_k'*F_k*phi_k/(1+phi_k'*F_k*phi_k) %Using equation after Eq. 4.72
+        lambda1 = 1 - alpha*epsilon^2/(1+phi_k'*F_k*phi_k);
         F_p = 1/lambda1* (F_k - F_k*phi_k*(phi_k)'*F_k) / ((lambda1/lambda2) + phi_k' * F_k * phi_k);
         
-        
+       
         % Compute the a priori prediction error
-        epsilon = output - theta_k' * phi_k;
         
         % Dead zone  
-        if epsilon < deadzone %Mulig dette er feil, prøver
+        if abs(epsilon) < deadzone %Mulig dette er feil, prøver
             epsilon = 0;
         end
             
@@ -84,7 +89,7 @@ switch flag
        
         % Initialize the parameters with the best model in the transition 
         % of the switching signal (its past value is saved in x(end))
-        
+        switch_signal
         if switch_signal ~= x(end)
             % reinitialize the parameters acording to u(3)
             
