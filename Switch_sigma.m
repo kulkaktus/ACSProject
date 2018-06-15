@@ -73,7 +73,7 @@ switch flag,
      % output update
     case 3
         best_i = x(m+1);
-        dwelltime = x(m+2)
+        
         if x(m+2) == DT
             best_Ji = 100000;
             
