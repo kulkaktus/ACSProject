@@ -20,9 +20,9 @@ Candidates = zeros(70, 5); % model, number of candidates, [margin, risetime, a, 
 index = 1;  
 for model=2 %For model 1, a=0.2, nq=9 gives 0.37 MM
     
-    for a = 0.1:0.05:0.5 %for 1, tried 0.1:0.02:0.5, none of them are feasible
+    for a = 0.2 %for 1, tried 0.1:0.02:0.5, none of them are feasible
                     % model 2, a=0.2, nq = 9
-        for nq = 8:10
+        for nq = 9
             G = Gs(model);
             B = Bs(model,:);
             A = As(model,:);
@@ -48,7 +48,7 @@ for model=2 %For model 1, a=0.2, nq=9 gives 0.37 MM
 
             K_new = @(Q) tf(R_new(Q),S_new(Q), Ts,'variable','z^-1');
             output_sensitivity = @(Q) feedback(1,K_new(Q)*G);
-            Mod_marg = @(Q) norm(output_sensitivity(Q), Inf)^(-1);
+            Mod_marg = @(Q) -norm(output_sensitivity(Q), Inf)^(-1);
 
             %Set inequality (c) and equality (ceq) constraints
             c = @(Q) [norm(M_m*output_sensitivity(Q), Inf) - 1;
@@ -96,7 +96,12 @@ stepinfo(CL)
 %figure(3);
 %bodemag(U);
 
+%% Save to file
+R2 = R_final;
+S2 = S_final;
+T2 = T;
 
+save('K2.mat', 'R2', 'S2', 'T2');
 %% Plots
 hold on
 figure(1)

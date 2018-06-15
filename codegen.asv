@@ -5,8 +5,8 @@ Gs = [G1; G2; G3];
 As = [G1.f; G2.f; G3.f];
 Bs = [G1.b; G2.b; G3.b];
 
-p1 = -1.7689; 
-p2 = 0.7939;
+p1 = -1.835; % rise time 0.7 
+p2 = 0.848; % rise time 0.7
 P = [1 p1 p2];
 
 Hs = [1 -1];
@@ -20,15 +20,13 @@ Candidates = zeros(70, 5); % model, number of candidates, [margin, risetime, a, 
 index = 1;  
 for model=2 %For model 1, a=0.2, nq=9 gives 0.37 MM
     
-    for a = 0.45 %for 1, tried 0.1:0.02:0.5, none of them are feasible
+    for a = 0.2 %for 1, tried 0.1:0.02:0.5, none of them are feasible
                     % model 2, a=0.2, nq = 9
-        for nq = 10
-%             G = Gs(model);
-%             B = Bs(model,:);
-%             A = As(model,:);
-            G = G2;
-            B = G2.B;
-            A = G2.F;
+        for nq = 9
+            G = Gs(model);
+            B = Bs(model,:);
+            A = As(model,:);
+           
             poles_aux = [a,a,a,a,a,a,a,a,a,a];
             coefs = poly(poles_aux);
             P_new = conv(P, coefs);
@@ -89,15 +87,19 @@ U=tf(conv(A,R_final), P_end, Ts, 'variable', 'z^-1');
 
 input= tf(conv(T,A), conv(A,S_final) + conv(conv(q_delay, B), R_final), Ts,'variable','z^-1'); figure(1);  
 figure(1)
-step(input); 
-bode(U);
+step(input);
 figure(2)
+bode(U);
+figure(3)
 step(CL);
 stepinfo(CL) 
 %figure(3);
 %bodemag(U);
 
-
+%% Save to file
+R2 = R_final;
+S2 = S_final;
+T2 = T;
 %% Plots
 hold on
 figure(1)
