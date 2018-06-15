@@ -11,9 +11,11 @@ function [sys,x0,str,ts]=aap(t,x,u,flag,nA,nB,d)
 
 n=nA+nB;
 Nstate=n*(n+2)+d+1;% The last state concernes the value of u(3) in the previous sampling time.
-deadzone=0; % this value can be chosen to freez adaptation if the adaptation error is too small.
+deadzone=0.01; % this value can be chosen to freez adaptation if the adaptation error is too small.
 F0=eye(n);
 
+G = 0.1;
+maxTrace = trace(G*eye(n));
 % The parameters of G1
 B1=[0         0   -0.0062    0.0118   -0.0052    0.0068]';
 A1=[1.0000   -4.2442    7.4788  -10.3763    8.2172   -3.9835    0.9080]';
@@ -67,12 +69,14 @@ switch flag
         % Using variable forgetting factor
         epsilon = output - theta_k' * phi_k;
         lambda2 = 1;
-        alpha = 0.05;
+        alpha = 0.01;
         %lambda1 = 1- phi_k'*F_k*phi_k/(1+phi_k'*F_k*phi_k) %Using equation after Eq. 4.72
         lambda1 = 1 - alpha*epsilon^2/(1+phi_k'*F_k*phi_k);
         F_p = 1/lambda1* (F_k - F_k*phi_k*(phi_k)'*F_k) / ((lambda1/lambda2) + phi_k' * F_k * phi_k);
         
-       
+        if trace(F_p) > maxTrace
+            F_p = F_p/norm(F_p)*G;
+        end
         % Compute the a priori prediction error
         
         % Dead zone  

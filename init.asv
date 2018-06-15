@@ -2,8 +2,20 @@ load('K1.mat');
 load('K2.mat');
 load('K3.mat');
 load('Tormod.mat');
+Ts = 0.04;
+% S1 = S1';
+% S2 = S2';
+% R1 = R1';
+% R2 = R2';
+R1 = [R1,0];
+S1 = [S1,0];
+R3 = [R3,0,0];
+S3 = [S3,0,0];
 
-nA = length(G1.F) - 1;
+A = G3.F;
+B = G3.B;
+Ts = 0.04;
+nA = length(A) - 1;
 d = 0;
 if length(B) > 1
     for i=2:length(B)
@@ -14,10 +26,13 @@ if length(B) > 1
 end
 nB = length(B)-d-1;
 
- poles_aux = [a,a,a,a,a,a,a,a,a,a];
-            coefs = poly(poles_aux);
-            P_new = conv(P, coefs);
+p1 = -1.835; %Overshoot 
+p2 = 0.7939;
+P = [1 p1 p2];
 
-beta = 0.5;
-lambda = 0.5;
-DT = 2;
+Hs = [1 -1];
+Hr = [1 1]; 
+
+beta = 1;
+lambda = 0.3;
+DT = 50;

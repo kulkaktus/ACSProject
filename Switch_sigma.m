@@ -80,7 +80,7 @@ switch flag,
                 old_sum = x(i);
                 new_sum = exp(-lambda)*old_sum + error^2;
                 Ji = beta* new_sum + error^2;
-                abc = [i, Ji]
+                
                 if Ji < best_Ji
                     best_Ji = Ji;
                     best_i = i;
