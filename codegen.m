@@ -18,7 +18,7 @@ nq = 9;
 ["Model", "Margin", "RiseTime", "a", "nq"] 
 Candidates = zeros(70, 5); % model, number of candidates, [margin, risetime, a, nq]
 index = 1;  
-for model=2 %For model 1, a=0.2, nq=9 gives 0.37 MM
+for model=3 %For model 1, a=0.2, nq=9 gives 0.37 MM
     
     for a = 0.2 %for 1, tried 0.1:0.02:0.5, none of them are feasible
                     % model 2, a=0.2, nq = 9

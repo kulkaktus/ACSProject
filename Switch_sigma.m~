@@ -41,8 +41,7 @@ switch flag,
                
                 new_sum = exp(-lambda)*old_sum + error^2;
                 Ji = beta* new_sum + error^2;
-                disp('oldsum')
-                beta*new_sum
+                beta*new_um
 
                 if Ji < best_Ji
                     best_Ji = Ji;
