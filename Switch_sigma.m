@@ -14,7 +14,7 @@ switch flag,
         sizes = simsizes;
         sizes.NumContStates  = 0;
         sizes.NumDiscStates  = m+2;
-        sizes.NumOutputs     = 1;
+        sizes.NumOutputs     = 1+m; %%%%%%%%%%%DETTE MÅ KANSKJE ENDRES TILBAKE %%%%%%%
         sizes.NumInputs      = m;
         sizes.DirFeedthrough = 1;
         sizes.NumSampleTimes = 1;
@@ -71,22 +71,26 @@ switch flag,
      % output update
     case 3
         best_i = x(m+1);
-        
+        sums = zeros(m,1);
         if x(m+2) == DT
             best_Ji = 100000;
             
             for i=1:m
-                error = u(i);
-                old_sum = x(i);
+                disp("model: ")
+                i
+                error = u(i)
+                old_sum = x(i)
                 new_sum = exp(-lambda)*old_sum + error^2;
-                Ji = beta* new_sum + error^2;
+                model = i
+                Ji = beta* new_sum + error^2
+                
                 
                 if Ji < best_Ji
                     best_Ji = Ji;
                     best_i = i;
                 end
 
-                x(i) = new_sum;            
+                sums(i) = new_sum;            
             end
             
             if best_i == 100000
@@ -95,7 +99,7 @@ switch flag,
         end
     
        
-        sys=best_i; 
+        sys=[best_i;sums]; 
     case 9
         sys=[];
  end

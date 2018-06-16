@@ -5,8 +5,8 @@ Gs = [G1; G2; G3];
 As = [G1.f; G2.f; G3.f];
 Bs = [G1.b; G2.b; G3.b];
 
-p1 = -1.835; % rise time 0.7 
-p2 = 0.848; % rise time 0.7
+p1 = -1.8074; % rise time 0.7 
+p2 = 0.8250; % rise time 0.7
 P = [1 p1 p2];
 
 Hs = [1 -1];
@@ -20,13 +20,16 @@ Candidates = zeros(70, 5); % model, number of candidates, [margin, risetime, a, 
 index = 1;  
 for model=2 %For model 1, a=0.2, nq=9 gives 0.37 MM
     
-    for a = 0.2 %for 1, tried 0.1:0.02:0.5, none of them are feasible
-                    % model 2, a=0.2, nq = 9
-        for nq = 9
+    for a = 0.45 %for 1, tried 0.1:0.02:0.5, none of them are feasible
+                    % model 2, a=0.45, nq = 8 % model 3 
+        for nq = 8
             G = Gs(model);
             B = Bs(model,:);
             A = As(model,:);
-           
+            G = G2;
+            A = G2.f;
+            B = G2.b;
+            
             poles_aux = [a,a,a,a,a,a,a,a,a,a];
             coefs = poly(poles_aux);
             P_new = conv(P, coefs);
@@ -48,7 +51,7 @@ for model=2 %For model 1, a=0.2, nq=9 gives 0.37 MM
 
             K_new = @(Q) tf(R_new(Q),S_new(Q), Ts,'variable','z^-1');
             output_sensitivity = @(Q) feedback(1,K_new(Q)*G);
-            Mod_marg = @(Q) -norm(output_sensitivity(Q), Inf)^(-1);
+            Mod_marg = @(Q) norm(output_sensitivity(Q), Inf)^(-1);
 
             %Set inequality (c) and equality (ceq) constraints
             c = @(Q) [norm(M_m*output_sensitivity(Q), Inf) - 1;
@@ -66,7 +69,7 @@ for model=2 %For model 1, a=0.2, nq=9 gives 0.37 MM
             K_final = tf(R_final,S_final, Ts,'variable','z^-1');
             Sens_out_new = feedback(1,K_final*G);
             MM_new = Mod_marg(Q_opt);
-            risetime = 5
+            risetime = 5;
             %if MM_new > 0.4
                 CL = tf(conv(T,G.b), P_end, Ts,'variable','z^-1'); 
                 CL_info = stepinfo(CL);

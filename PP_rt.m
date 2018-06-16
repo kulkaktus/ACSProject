@@ -16,7 +16,7 @@ switch flag,
         sizes = simsizes;
         sizes.NumContStates  = 0;
         sizes.NumDiscStates  = 0;
-        sizes.NumOutputs     = nA+nB+d+n_Hr+n_Hs+3+20;
+        sizes.NumOutputs     = nA+nB+d+n_Hr+n_Hs+3;
         sizes.NumInputs      = nA+nB;
         sizes.DirFeedthrough = nA+nB+d+n_Hr+n_Hs+3;
         sizes.NumSampleTimes = 1;
@@ -48,8 +48,8 @@ switch flag,
         [R,S] = Poleplace(B,A,Hr,Hs,P);
         T = sum(R); %Same tracking and regulation dynamics
         
-        R = [R, zeros(1, 10)]';
-        S = [S, zeros(1, 10)]';
+        R = [R]';
+        S = [S]';
         [R;S;T]
         %%%%%%%%%%%%%%%%%%%%%%%%%%%% Should we use Q-parametrization? Too slow here probably %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         sys=[R;S;T];
