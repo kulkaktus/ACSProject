@@ -80,7 +80,7 @@ switch flag
         % Compute the a priori prediction error
         
         % Dead zone  
-        if abs(epsilon) < deadzone %Mulig dette er feil, prï¿½ver
+        if abs(epsilon) < deadzone %Mulig dette er feil, prøver
             epsilon = 0;
         end
             
@@ -104,8 +104,6 @@ switch flag
                 case 2
                     theta_p = [A2(2:end);B2(2+d:end)];
                     F_p = F0;
-                    disp("model 2")
-                    
                 case 3
                     theta_p = [A3(2:end);B3(2+d:end)];
                     F_p = F0;

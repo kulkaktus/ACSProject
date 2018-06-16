@@ -3,6 +3,14 @@ load('K2.mat');
 load('K3.mat');
 load('Tormod.mat');
 Ts = 0.04;
+% S1 = S1';
+% S2 = S2';
+% R1 = R1';
+% R2 = R2';
+R1 = [R1,0];
+S1 = [S1];
+
+
 A = G3.F;
 B = G3.B;
 Ts = 0.04;
@@ -17,13 +25,13 @@ if length(B) > 1
 end
 nB = length(B)-d-1;
 
-p1 = -1.8555; % rise time 0.7 MAYBE THE POLE VALUES WORK BETTER FOR THE ADAPTIVE ONE
-p2 = 0.8656; % rise time 0.7
+p1 = -1.835; % rise time 0.7 MAYBE THE POLE VALUES WORK BETTER FOR THE ADAPTIVE ONE
+p2 = 0.848; % rise time 0.7
 P = [1 p1 p2];
 
 Hs = [1 -1];
 Hr = [1 1]; 
 
-beta = 40; 
-lambda = 0.95; %0.2-0.6
+beta = 20; 
+lambda = 0.4; %0.2-0.6
 DT = 25;
