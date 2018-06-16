@@ -76,11 +76,11 @@ switch flag,
         y = [u(3);x(ns+1:nr+ns)];
 
         u_k = T*ref(1) -   R*y(1:length(R)) - past_inputs(1:length(S)-1)'* (S(2:end))';
-%         if u_k > Usatplus
-%             u_k = Usatplus;
-%         elseif u_k < Usatminus
-%             u_k = Usatminus;
-%         end
+        if u_k > Usatplus
+            u_k = Usatplus;
+        elseif u_k < Usatminus
+            u_k = Usatminus;
+        end
         % Update the state vector (including past inputs, past outputs and past reference signals)
         if nt>0
             sys=[u_k;x(1:ns-1);u(3);x(ns+1:nr+ns-1);u(2);x(nr+ns+1:n-1)]; 
@@ -110,7 +110,13 @@ switch flag,
         ref = u(2);
         y = [u(3);x(ns+1:nr+ns)];
         u_k = T*ref(1) -   R*y(1:length(R)) - past_inputs(1:length(S)-1)'* (S(2:end))';
-       
+
+        if u_k > Usatplus
+            u_k = Usatplus;
+            elseif u_k < Usatminus
+            u_k = Usatminus;
+        end
+
         
         sys=u_k;
   
