@@ -76,8 +76,10 @@ switch flag,
             best_Ji = 100000;
             
             for i=1:m
-                error = u(i);
-                old_sum = x(i);
+                disp("model: ")
+                i
+                error = u(i)
+                old_sum = x(i)
                 new_sum = exp(-lambda)*old_sum + error^2;
                 model = i
                 Ji = beta* new_sum + error^2
