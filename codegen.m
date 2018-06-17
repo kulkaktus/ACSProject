@@ -100,11 +100,11 @@ stepinfo(CL)
 %bodemag(U);
 
 %% Save to file
-R2 = R_final;
-S2 = S_final;
-T2 = T;
+R3 = R_final;
+S3 = S_final;
+T3 = T;
 
-save('K2.mat', 'R2', 'S2', 'T2');
+save('K3_with_four_poles.mat', 'R3', 'S3', 'T3');
 %% Plots
 hold on
 figure(1)

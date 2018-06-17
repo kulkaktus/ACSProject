@@ -1,7 +1,11 @@
 load('K1.mat');
 load('K2.mat');
-load('K3.mat');
+load('K3_with_four_poles.mat');
 load('Tormod.mat');
+
+R3 = [R3,0];
+S3 = [S3,0];
+
 Ts = 0.04;
 A = G3.F;
 B = G3.B;
@@ -24,6 +28,6 @@ P = [1 p1 p2];
 Hs = [1 -1];
 Hr = [1 1]; 
 
-beta = 1; 
-lambda = 0.90; %0.2-0.6
-DT = 50;
+beta = 40; 
+lambda = 0.95; %0.2-0.6
+DT = 25;
