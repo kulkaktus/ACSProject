@@ -52,11 +52,7 @@ switch flag
         % Add internal high frequency poles as aux poles to P
         intPoles = roots(A);
         intPoles = intPoles(abs(imag(intPoles)) > 0.001);
-%         intPoles = [    
-%         0.2796 + 0.9271i;
-%         0.2796 - 0.9271i;
-%         0.7348 + 0.6482i;
-%         0.7348 - 0.6482i];
+
         P = conv(P,poly(intPoles));
 
         alpha = 0.2;

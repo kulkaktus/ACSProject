@@ -55,14 +55,19 @@ switch flag,
     case 2     
         
         switch_signal_in_RST = u(1);
+        t
         switch u(1)
             case 1
+                "Case1"
                 R=R1;S=S1;T=T1;
             case 2
+                "Case2"
                 R=R2;S=S2;T=T2;
             case 3
+                "Case3"
                 R=R3;S=S3;T=T3;
             case 4
+                "Case4"
                 R=u(4:nr+4)';
                 S=u(nr+5:nr+ns+5)';
                 T=u(nr+ns+6:nr+ns+nt+6)';    
@@ -87,14 +92,19 @@ switch flag,
         end
      % output update
     case 3
+        t
         switch u(1)
             case 1
+                "Case1"
                 R=R1;S=S1;T=T1;
             case 2
+                "Case2"
                 R=R2;S=S2;T=T2;
             case 3
+                "Case3"
                 R=R3;S=S3;T=T3;
             case 4
+                "Case4"
                 R=u(4:nr+4)';
                 S=u(nr+5:nr+ns+5)';
                 T=u(nr+ns+6:nr+ns+nt+6)';

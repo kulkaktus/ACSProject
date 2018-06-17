@@ -77,12 +77,12 @@ switch flag,
             
             for i=1:m
                 disp("model: ")
-                i
-                error = u(i)
-                old_sum = x(i)
+                
+                error = u(i);
+                old_sum = x(i);
                 new_sum = exp(-lambda)*old_sum + error^2;
-                model = i
-                Ji = beta* new_sum + error^2
+               
+                Ji = beta* new_sum + error^2;
                 
                 
                 if Ji < best_Ji

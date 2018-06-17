@@ -1,15 +1,15 @@
 function [sys,x0,str,ts]=PP_rt(t,x,u,flag,nA,nB,d,P,Hs,Hr,Ts)
 % This S-Function computes an RST controller based on the pole placement technique.
-% The input vector u has two vector inputs for the coefficients of A and B polynomials 
+% The input vector u has two vector inputs for the coefficients of A and B polynomials
 % and a vector for the desired closed-loop polynomial P. The
 % fixed parts of the controllers are specified in Hs and Hr vectors.
-% The output of the block is the RST controller as column vectors. 
+% The output of the block is the RST controller as column vectors.
 % The polynomial T is computed to have the same dynamics for regulation and tracking.
-% Ts is the sampling period 
+% Ts is the sampling period
 
 n_Hs=length(Hs)-1;
 n_Hr=length(Hr)-1;
-
+d = 1;
 switch flag,
     % Initialization
     case 0,
@@ -20,18 +20,18 @@ switch flag,
         sizes.NumInputs      = nA+nB;
         sizes.DirFeedthrough = nA+nB+d+n_Hr+n_Hs+3;
         sizes.NumSampleTimes = 1;
-
+        
         sys = simsizes(sizes);
-
+        
         x0  = [];
         str = [];
-        ts  = [Ts 0]; 
+        ts  = [Ts 0];
         
-     % state update 
-    case 2       
+        % state update
+    case 2
         sys=[];
         
-     % output update
+        % output update
     case 3
         if t==0 %Use model 3 as initial model
             B=[0         0    0.0080   -0.0118    0.0204    0.0079];
@@ -45,19 +45,86 @@ switch flag,
         % The students should write the code for computing an RST
         % controller
         
-        [R,S] = Poleplace(B,A,Hr,Hs,P);
-        T = sum(R); %Same tracking and regulation dynamics
-        length(R)
-        length(S)
-        R = [R, zeros(1,9)]';
-        S = [S, zeros(1,9)]';
+        %Determine delay d and separate it from B
+        d = 1;
+%         if length(B) > 1
+%             for i=2:length(B)
+%                 if B(i) == 0
+%                     d = d + 1;
+%                 end
+%             end
+%         end
+        B = B(1+d:end);
         
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%% Should we use Q-parametrization? Too slow here probably %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        sys=[R;S;T];
+        n_a = length(A)-1;
+        n_b = length(B)-1;
+        n_hr = length(Hr)-1;
+        n_hs = length(Hs)-1;
+        n_a1 = n_a+n_hs;
+        n_b1 = n_b+n_hr;
+        n_s1 = n_b+n_hr+d-1;
+        
+        A1 = conv(A,Hs);
+        B1 = conv(B,Hr);
+        
+        
+        internal_poles = roots(A);
+        internal_poles = internal_poles(abs(imag(internal_poles)) > 0.001);
+        "1"
+        P = conv(P, poly(internal_poles));
+        
+        alpha = 0.2;
+        nP_max = n_a + n_hs + n_b + n_hr + d -1;
+        n = nP_max - (length(P)-1);
+        
+        Pf = [1, -alpha];
+        for j = 2:n
+            Pf = conv(Pf,[1, -alpha]); 
+        end
+
+        P = conv(P, Pf);
+        n_p = length(P) - 1;
+
+        p = [P, zeros(1,n_a1+n_b1+d-1-n_p)]';
+
+        
+        "3"
+        % M1, M2 are left and right halves of sylvester matrix
+        
+        M1 = tril(toeplitz([A1,zeros(1,n_b1+d-1)])); %PROBLEM%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        M1 = M1(:, 1:n_b1+d);
+        "4"
+        M2 = tril(toeplitz([zeros(1,d+1), B1(2:end), zeros(1,n_a1-1)]));
+        M2 = M2(:, 1:n_a1);
+        M = [M1, M2];
+        "5"
+        if rcond(M) > eps 
+            "6.5"
+            p
+            
+            x = M\p;
+            "6"
+            S1 = x(1:n_s1+1)';
+            R1 = x(n_s1+2:end)';
+
+            S = conv(S1,Hs);
+            R = conv(R1,Hr);
+        else
+            % If M is close to singular open the loop by setting R = [0 ... S =
+            % [1 0000 ] -> T = 0, u = 0
+            R = zeros(1,n_a1+n_hr);
+            S = [1, zeros(1,n_b1+d+n_hs-1)];
+        end
+            
+        T = sum(R); %Same tracking and regulation dynamics
+        
+        R = [R, zeros(1,9)];
+        S = [S, zeros(1,9)];
+        
+        sys=[R';S';T];
         
     case 9
         sys=[];
- end
-    
-        
-        
+end
+
+

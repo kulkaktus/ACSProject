@@ -11,8 +11,8 @@ function [sys,x0,str,ts]=aap(t,x,u,flag,nA,nB,d)
 
 n=nA+nB;
 Nstate=n*(n+2)+d+1;% The last state concernes the value of u(3) in the previous sampling time.
-deadzone=0.01; % this value can be chosen to freez adaptation if the adaptation error is too small.
-F0=eye(n);
+deadzone=0.05; % this value can be chosen to freez adaptation if the adaptation error is too small.
+F0=100*eye(n);
 
 G = 0.1;
 maxTrace = trace(G*eye(n));
@@ -57,7 +57,7 @@ switch flag
         
         F_k=reshape(x(2*n+d+1:end-1),n,n); % We never set the initial one...
         if t == 0
-            F_k = F0
+            F_k = F0;
         end
         theta_k=x(1:n);
         phi_k=[x(n+1:n+nA);x(n+nA+d+1:2*n+d)];  
@@ -69,7 +69,7 @@ switch flag
         % Using variable forgetting factor
         epsilon = output - theta_k' * phi_k;
         lambda2 = 1;
-        alpha = 0.01;
+        alpha = 0.05*0.01;
         %lambda1 = 1- phi_k'*F_k*phi_k/(1+phi_k'*F_k*phi_k) %Using equation after Eq. 4.72
         lambda1 = 1 - alpha*epsilon^2/(1+phi_k'*F_k*phi_k);
         F_p = 1/lambda1* (F_k - F_k*phi_k*(phi_k)'*F_k) / ((lambda1/lambda2) + phi_k' * F_k * phi_k);
@@ -103,15 +103,12 @@ switch flag
                     F_p = F0;
                 case 2
                     theta_p = [A2(2:end);B2(2+d:end)];
-                    F_p = F0;
+                    F_p = F0;   
                 case 3
                     theta_p = [A3(2:end);B3(2+d:end)];
                     F_p = F0;
-                case 4
-                    % Use previous best
-                otherwise %Use model 3
-                    theta_p = [A3(2:end);B3(2+d:end)];
-                    F_p = F0;
+                
+               
                     
             end
             
